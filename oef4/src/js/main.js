@@ -6,65 +6,66 @@ import * as bootstrap from 'bootstrap'
 
 //eigen js
 
-// ----------------------------------
- //Oefening bundel: M12
-// ----------------------------------
-class Persoon {
-    constructor(name, age) {
-        this.name = name;
-        this.age = age;
 
-    }
-    info() {
-        return `${this.name} (${this.age} jaar) `;
-    }
-}
-class Employee {
-    constructor(name, age, departament) {
-        this.name = name;
-        this.age = age;
-        this.departament = departament;
+//  import van modules
+import User from './userModel.js';
+// benoemde import voor de functie
+import { createUserCard } from './userCard.js';
 
-    }
-    info() {
-        return `${this.name} (${this.age} jaar) Departament: ${this.departament}`;
+const users = [];
+
+//  DOM
+
+function updateStatus() {
+    const statusElement = document.getElementById('ex4_status');
+
+    if (users.length === 0) {
+        statusElement.className = 'alert alert-secondary mb-3';
+        statusElement.textContent = 'Nog geen gebruikers toegevoegd.';
+    } else {
+        statusElement.className = 'alert alert-success mb-3';
+        statusElement.textContent = `${users.length} gebruiker(s) succesvol toegevoegd!`;
     }
 }
-class Manager extends Employee {
-    constructor(name, age, departament, team) {
-        super(name, age, departament);
-        this.role = "Manager";
-        this.team = `${team}`;
-    }
-    info() {
-        return `[MANAGER] ${super.info()}. Jouw team ${this.team} mensen.`;
-    }
-}
-const exEmployee = [];
-function addClassEmployee() {
-    const name = document.getElementById("ex2_name").value.trim();
-    const departament = document.getElementById("ex2_dep").value.trim();
-    const age = Number(document.getElementById("ex2_age").value);
-    const team = Number(document.getElementById("ex2_team").value);
-    const role = document.getElementById("ex2_type").value;
-    const list = document.getElementById("ex2_list");
-    const feedback = document.getElementById("ex2_feedback")
 
-    if (!name || !age|| !departament) return;
-    const employee = role === "manager"
-        ? new Manager(name, age, departament, team)
-        : new Employee(name, age, departament);
+function renderUserList() {
+    const listElement = document.getElementById('ex4_list');
 
-    exEmployee.push(employee);
-    feedback.textContent = "Togevoegd"
-    feedback.className = "alert alert-info"
+    const listHTML = users.map(function(user) {
+        return createUserCard(user);
+    }).join('');
 
-    list.innerHTML = exEmployee
-        .map(u => `<li class="list-group-item">${u.info()}</li>`)
-        .join("");
+    listElement.innerHTML = listHTML;
+    updateStatus();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("ex2_btn")
-        ?.addEventListener("click", addClassEmployee);
-});
+function addUser() {
+    const nameInput = document.getElementById('ex4_name');
+    const ageInput = document.getElementById('ex4_age');
+
+    const name = nameInput.value.trim();
+    const age = parseInt(ageInput.value);
+
+    // validatie
+    if (!name) {
+        updateStatus('❌ Fout: Naam mag niet leeg zijn.', 'danger');
+        return;
+    }
+    if (isNaN(age) || age <= 0) {
+        updateStatus('❌ Fout: Leeftijd moet een positief getal zijn.', 'danger');
+        return;
+    }
+
+    // nieuw User object
+    const newUser = new User(name, age);
+
+    users.push(newUser);
+    renderUserList();
+
+    
+    nameInput.value = '';
+    ageInput.value = '';
+}
+
+document.getElementById('ex4_btn').addEventListener('click', addUser);
+updateStatus();
