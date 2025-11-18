@@ -1,0 +1,19 @@
+//eigen css
+
+//$primary:purple;
+//$fourth:#7b2cbf;
+//
+////theme colors uitbereiden
+//$theme-colors:map-merge{
+//$theme-colors(
+//      "fourth":$fourth,
+//      "fourth-light":lighten($fourth,12%),
+//      "fourth-dark":darken($fourth,10%)
+//)
+//}
+
+//import van bootstrap css
+@import "bootstrap/scss/bootstrap";
+
+//import van icons
+//@import "bootstrap-icons/font/bootstrap-icons";
