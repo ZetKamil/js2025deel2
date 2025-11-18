@@ -62,7 +62,7 @@ function addUser() {
     users.push(newUser);
     renderUserList();
 
-    
+
     nameInput.value = '';
     ageInput.value = '';
 }
